@@ -1,13 +1,18 @@
-from utils.config_loader import load_config
-from api.api_client import APIClient
+from utils.config import Config
 
-def test_login_api():
-    config = load_config()
-    api_client = APIClient()
 
-    response = api_client.login(
-        config['base_url'],
-        config['username'],
-        config['password']
+def test_login_api(playwright):
+
+    request_context = playwright.request.new_context(
+        base_url=Config.BASE_URL
     )
-    assert response.status_code == 200
+
+    response = request_context.post(
+        "/",
+        form={
+            "user-name": "standard_user",
+            "password": "secret_sauce"
+        }
+    )
+
+    assert response.status == 200

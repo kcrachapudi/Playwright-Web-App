@@ -1,17 +1,20 @@
-def __init__(self, page):
-    self.page = page
+class LoginPage:
 
-    self.username_input = "input#username"
-    self.password_input = "input#password"
-    self.login_button = "button#type=['submit']"
-    self.flash_message = 'div#flash'
+    def __init__(self, page):
+        self.page = page
 
+    # URL
+    url = "https://www.saucedemo.com/"
 
-def login(self, username, password):
-    self.page.fill(self.username_input, username)
-    self.page.fill(self.password_input, password)
-    self.page.click(self.login_button)
+    # Selectors
+    username_input = "#user-name"
+    password_input = "#password"
+    login_button = "#login-button"
 
+    def navigate(self):
+        self.page.goto(self.url)
 
-def get_flash_message(self):
-    return self.page.text_content(self.flash_message)
+    def login(self, username, password):
+        self.page.fill(self.username_input, username)
+        self.page.fill(self.password_input, password)
+        self.page.click(self.login_button)

@@ -1,16 +1,38 @@
 import pytest
 from playwright.sync_api import sync_playwright
-from utils.config_loader import load_config
+from utils.config import Config
 
-@pytest.fixture
-def browser():
-    config = load_config()
-    with sync_playwright() as sp:
-        browser = getattr(sp, config['browser']).launch(
-            headless = config['headless']
+
+# ============================
+# UI Fixture
+# ============================
+@pytest.fixture(scope="function")
+def page():
+
+    with sync_playwright() as p:
+
+        browser = p.chromium.launch(
+            headless=Config.HEADLESS
         )
 
         context = browser.new_context()
         page = context.new_page()
+
         yield page
+
         browser.close()
+
+
+# ============================
+# API Fixture
+# ============================
+@pytest.fixture(scope="session")
+def api_request(playwright):
+
+    request_context = playwright.request.new_context(
+        base_url=Config.BASE_URL
+    )
+
+    yield request_context
+
+    request_context.dispose()
