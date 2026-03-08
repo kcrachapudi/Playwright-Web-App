@@ -1,6 +1,18 @@
+#import nest_asyncio
+#nest_asyncio.apply()
+
 import pytest
 from playwright.sync_api import sync_playwright
 from utils.config import Config
+
+# ============================
+# Core Playwright Engine
+# ============================
+@pytest.fixture(scope="session")
+def playwright_engine(): # Renamed to avoid confusion with the import
+    with sync_playwright() as p:
+        yield p
+
 
 
 # ============================
@@ -27,9 +39,9 @@ def page():
 # API Fixture
 # ============================
 @pytest.fixture(scope="session")
-def api_request(playwright):
-
-    request_context = playwright.request.new_context(
+def api_request(playwright_engine):
+    # Use 'playwright_engine' (the fixture) to create the request context
+    request_context = playwright_engine.request.new_context(
         base_url=Config.BASE_URL
     )
 
